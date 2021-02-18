@@ -1,0 +1,12 @@
+{
+    "solutions" : [
+        {
+            "id": "f9e88625-965c-429e-808f-b746e61513e2",
+            "created_at_date": "2021-02-18T20:19:50.591Z",
+            "solution_text": "I've attached the solution below. The code is well commented so it's easier to figure out what's going on.",
+            "attached_files": ["solution.cpp"],
+            "problem_id": "cd846f58-cd72-4128-9d83-b992ee8924a3",
+            "review_feedback_id": null
+        }
+    ]
+}

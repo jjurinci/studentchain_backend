@@ -1,0 +1,24 @@
+{    
+    "categories" : [
+        {
+            "id": "93d37fe1-e74f-4bca-af9c-7bfc8099dd66",
+            "name": "Mathematics"
+        },
+        {
+            "id": "d9f29788-9fd7-47f5-ac78-0dc639bac3ea",
+            "name": "Programming"
+        },
+        {
+            "id": "f526f741-b784-44e2-8517-c19456663bbb",
+            "name": "Physics"
+        },
+        {
+            "id": "de98f1c9-e62d-4ea5-8f92-9efd896a07cc",
+            "name": "Statistics"
+        },
+        {
+            "id": "8fee0e15-0a14-4070-ae08-e2ae1cef90c9",
+            "name": "Biology"
+        }
+    ]
+}

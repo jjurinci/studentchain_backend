@@ -1,0 +1,76 @@
+{
+    "users" : [
+        {
+            "id": "ecfc8cdb-e354-43e3-8255-8dd017fff6ae",
+            "username": "kevin7",
+            "password": "password",
+            "wallet_public_key": "",
+            "account_type": "solver",
+            "total_number_problems": 0,
+            "approved_problems": 0
+        },
+        {
+            "id": "6c4f5007-a1c1-440e-ac0a-3850f3dfc2b9",
+            "username": "user514",
+            "password": "password",
+            "wallet_public_key": "",
+            "account_type": "buyer",
+            "total_number_problems": 7,
+            "approved_problems": 6
+        },
+        {
+            "id": "c7b035f7-5543-4dab-b724-f3ed2e4901bd",
+            "username": "jacob8",
+            "password": "password",
+            "wallet_public_key": "",
+            "account_type": "buyer",
+            "total_number_problems": 0,
+            "approved_problems": 0
+        },
+        {
+            "id": "8e8b3f45-9dae-4c1c-8b28-a6d04125b760",
+            "username": "stardust",
+            "password": "password",
+            "wallet_public_key": "",
+            "account_type": "buyer",
+            "total_number_problems": 2,
+            "approved_problems": 2
+        },
+        {
+            "id": "c47f2a5b-aee4-4a01-aac9-2af09d898146",
+            "username": "franksun",
+            "password": "password",
+            "wallet_public_key": "",
+            "account_type": "buyer",
+            "total_number_problems": 13,
+            "approved_problems": 15
+        },
+        {
+            "id": "dbabf275-2a15-409d-8f47-e990d1d6c755",
+            "username": "dale457",
+            "password": "password",
+            "wallet_public_key": "",
+            "account_type": "buyer",
+            "total_number_problems": 1,
+            "approved_problems": 1
+        },
+        {
+            "id": "aee4ab76-2840-4c61-81ce-0af1af6b1203",
+            "username": "mayaimls",
+            "password": "password",
+            "wallet_public_key": "",
+            "account_type": "buyer",
+            "total_number_problems": 30,
+            "approved_problems": 23
+        },
+        {
+            "id": "3e90e684-a552-426b-86b1-f931d5ac88de",
+            "username": "jose_p",
+            "password": "password",
+            "wallet_public_key": "",
+            "account_type": "buyer",
+            "total_number_problems": 3,
+            "approved_problems": 2
+        }
+    ]
+}
