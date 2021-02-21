@@ -2,18 +2,27 @@ const getSolutionsByProblemId = (req, res) => {
     const solutions = require('../mock_database/solutions.json')
     let foundSolutions = solutions.data.filter(solution => solution.problem_id == req.params.problem_id)
     foundSolutions = foundSolutions.map(solution => populateSolution(solution))
-    return res.status(200).json({
-        foundSolutions
-    })
+    return res.status(200).json(foundSolutions)
+}
+
+const getSolutionsByMultipleProblemIds = (req, res) => {
+    const solutions = require('../mock_database/solutions.json')
+    
+    const problem_ids = req.body.data
+    const problem_id_included = {}
+    for(id of problem_ids)
+        problem_id_included[id] = true
+
+    let foundSolutions = solutions.data.filter(solution => problem_id_included[solution.problem_id])
+    foundSolutions = foundSolutions.map(solution => populateSolution(solution))
+    return res.status(200).json(foundSolutions)
 }
 
 const getSolutionsBySolverId = (req, res) => {
     const solutions = require('../mock_database/solutions.json')
     let foundSolutions = solutions.data.filter(solution => solution.solver_id == req.params.solver_id)
     foundSolutions = foundSolutions.map(solution => populateSolution(solution))
-    return res.status(200).json({
-        foundSolutions
-    })
+    return res.status(200).json(foundSolutions)
 }
 
 const postSolution = (req, res) => {
@@ -55,7 +64,7 @@ const populateSolution = (solution) =>{
     const reviews    = require('../mock_database/review_feedback.json')
 
     solution.problem        = problems.data.find(problem => problem.id == solution.problem_id)
-    solution.current_solver = users.data.find(user => user.id == solution.solver_id)
+    solution.solver         = users.data.find(user => user.id == solution.solver_id)
     solution.reviews        = reviews.data.filter(review => review.id == solution.review_feedback_id)
 
     if(solution.current_solver)
@@ -67,5 +76,5 @@ const populateSolution = (solution) =>{
     return solution
 }
 
-module.exports = {getSolutionsByProblemId, getSolutionsBySolverId,
-                  postSolution, updateSolution}
+module.exports = {getSolutionsByProblemId, getSolutionsByMultipleProblemIds,
+                  getSolutionsBySolverId, postSolution, updateSolution}

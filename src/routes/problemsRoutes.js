@@ -7,7 +7,8 @@ problemsRouter.route('/')
               .get(problemsLogic.getAllProblems)
               .post(problemsLogic.postProblem)
 
-problemsRouter.route('/:id')
+problemsRouter.route('/:problem_id')
+              .get(problemsLogic.getProblemById)
               .put(problemsLogic.updateProblem)
               .delete(problemsLogic.deleteProblem)
 

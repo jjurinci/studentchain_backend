@@ -9,7 +9,7 @@ userRouter.route('/register')
 userRouter.route('/login')
           .post(userLogic.loginUser)
 
-userRouter.route('/:id')
+userRouter.route('/:user_id')
           .get(userLogic.getUserById)
           .put(userLogic.updateUser)
           .delete(userLogic.deleteUser)

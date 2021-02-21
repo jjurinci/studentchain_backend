@@ -134,7 +134,7 @@
             ],
             "due_days": 4,
             "price_eth": 0.0017,
-            "status": "unsolved",
+            "status": "waiting_for_review",
             "category_id": "93d37fe1-e74f-4bca-af9c-7bfc8099dd66",
             "buyer_id": "ecfc8cdb-e354-43e3-8255-8dd017fff6ae",
             "current_solver_id": null
@@ -149,10 +149,10 @@
             ],
             "due_days": 3,
             "price_eth": 0.0023,
-            "status": "unsolved",
+            "status": "being_solved",
             "category_id": "93d37fe1-e74f-4bca-af9c-7bfc8099dd66",
             "buyer_id": "ecfc8cdb-e354-43e3-8255-8dd017fff6ae",
-            "current_solver_id": null
+            "current_solver_id": "3e90e684-a552-426b-86b1-f931d5ac88de"
         },
         {
             "id": "KgPpOzCd9nWNVrfW",
@@ -166,7 +166,7 @@
             "due_days": "4",
             "price": "0.23",
             "category_id": "93d37fe1-e74f-4bca-af9c-7bfc8099dd66",
-            "buyer_id": "randomBuyerIdChangeLater",
+            "buyer_id": "testid1",
             "solver_id": null,
             "status": "unsolved"
         },
@@ -182,7 +182,7 @@
             "due_days": "5",
             "price": "0.34",
             "category_id": "93d37fe1-e74f-4bca-af9c-7bfc8099dd66",
-            "buyer_id": "randomBuyerIdChangeLater",
+            "buyer_id": "testid2",
             "solver_id": null,
             "status": "unsolved"
         }

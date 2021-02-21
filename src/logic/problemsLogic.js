@@ -11,24 +11,29 @@ const getAllProblems = (req, res) => {
     return res.json(problems)
 }
 
+const getProblemById = (req, res) => {
+    const problems = require('../mock_database/problems.json')
+    let foundProblem = problems.data.find(problem => problem.id == req.params.problem_id)
+    if(foundProblem == undefined) foundProblem = {}
+    else foundProblem = populateProblem(foundProblem)
+    
+    return res.status(200).json(foundProblem)
+}
+
 const getProblemsByBuyerId = (req, res) => {
     const problems = require('../mock_database/problems.json')
     let foundProblems = problems.data.filter(problem => problem.buyer_id == req.params.buyer_id)
     foundProblems = foundProblems.map(problem => populateProblem(problem))
     
-    return res.status(200).json({
-        foundProblems
-    })
+    return res.status(200).json(foundProblems)
 }
 
 const getProblemsByCurrentSolverId = (req, res) => {
     const problems = require('../mock_database/problems.json')
-    const foundProblems = problems.data.filter(problem => problem.current_solver_id == req.params.current_solver_id)
+    let foundProblems = problems.data.filter(problem => problem.current_solver_id == req.params.current_solver_id)    
     foundProblems = foundProblems.map(problem => populateProblem(problem))
 
-    return res.status(200).json({
-        foundProblems
-    })
+    return res.status(200).json(foundProblems)
 }
 
 const postProblem = (req, res) => {
@@ -105,5 +110,5 @@ const populateProblem = (problem) =>{
 }
 
 
-module.exports = {getAllProblems, getProblemsByBuyerId, getProblemsByCurrentSolverId,
+module.exports = {getAllProblems, getProblemById, getProblemsByBuyerId, getProblemsByCurrentSolverId,
                   postProblem, updateProblem, deleteProblem, populateProblem}

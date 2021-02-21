@@ -8,7 +8,7 @@
 
 const getUserById = (req, res) => {
     const users = require('../mock_database/users.json')
-    const foundUser = users.data.find(user => user.id == req.params.id)
+    const foundUser = users.data.find(user => user.id == req.params.user_id)
     
     if(foundUser == undefined){
         return res.status(404).json({

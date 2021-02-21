@@ -18,4 +18,8 @@ solutionsRouter.route('/solver/:solver_id')
 solutionsRouter.route('/problem/:problem_id')
                .get(solutionsLogic.getSolutionsByProblemId)
 
+// Gets all solutions that solve any problem in the passed problem array
+solutionsRouter.route('/multiple_problems')
+               .post(solutionsLogic.getSolutionsByMultipleProblemIds)
+
 module.exports = solutionsRouter

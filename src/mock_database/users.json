@@ -82,6 +82,7 @@
             "approved_problems": 0
         },
         {
+            "id": "testid1",
             "username": "test2",
             "email": "test2@gmail.com",
             "password": "$2a$12$h5oIh4ikmlW2y3UlBhmqR.ySL1sz4bb/iCedBRgCnWua9LN2RdG2S",
@@ -91,6 +92,7 @@
             "approved_problems": 0
         },
         {
+            "id": "testid2",
             "username": "test3",
             "email": "test3@gmail.com",
             "password": "$2a$12$612LUV8VlnkQ.vmWmEHVCuDhBQhhBVydguAYkN9VOVoWq66WyZtSG",
