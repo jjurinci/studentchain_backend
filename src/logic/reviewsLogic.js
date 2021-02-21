@@ -2,8 +2,7 @@ const getReviewsBySolutionId = (req, res) => {
     const reviewFeedback = require('../mock_database/review_feedback.json')
     const foundReviews = reviewFeedback.data.filter(review => review.solution_id == req.params.solution_id) 
     return res.status(200).json({
-        status: "success",
-        data: foundReviews
+        foundReviews
     })
 }
 

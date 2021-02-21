@@ -7,24 +7,27 @@
 
 const getAllProblems = (req, res) => {
     const problems = require('../mock_database/problems.json')
+    problems.data = problems.data.map(problem => populateProblem(problem))
     return res.json(problems)
 }
 
 const getProblemsByBuyerId = (req, res) => {
     const problems = require('../mock_database/problems.json')
-    const foundProblems = problems.data.filter(problem => problem.buyer_id == req.params.buyer_id)
+    let foundProblems = problems.data.filter(problem => problem.buyer_id == req.params.buyer_id)
+    foundProblems = foundProblems.map(problem => populateProblem(problem))
+    
     return res.status(200).json({
-        status: "success",
-        data: foundProblems
+        foundProblems
     })
 }
 
 const getProblemsByCurrentSolverId = (req, res) => {
     const problems = require('../mock_database/problems.json')
     const foundProblems = problems.data.filter(problem => problem.current_solver_id == req.params.current_solver_id)
+    foundProblems = foundProblems.map(problem => populateProblem(problem))
+
     return res.status(200).json({
-        status: "success",
-        data: foundProblems
+        foundProblems
     })
 }
 
@@ -84,5 +87,23 @@ const deleteProblem = (req, res) => {
     })
 }
 
+const populateProblem = (problem) =>{
+    const categories = require('../mock_database/categories.json')
+    const users      = require('../mock_database/users.json')
+
+    problem.category = categories.data.find(category => category.id == problem.category_id)
+    problem.buyer    = users.data.find(user => user.id == problem.buyer_id)
+    problem.solver   = users.data.find(user => user.id == problem.solver_id)
+
+    if(problem.buyer)
+        problem.buyer.password = problem.buyer.email  = undefined    
+    
+    if(problem.solver)
+        problem.solver.password = problem.solver.email = undefined
+    
+    return problem
+}
+
+
 module.exports = {getAllProblems, getProblemsByBuyerId, getProblemsByCurrentSolverId,
-                  postProblem, updateProblem, deleteProblem}
+                  postProblem, updateProblem, deleteProblem, populateProblem}

@@ -86,44 +86,112 @@ const deleteUser = (req, res) => {
     })
 }
 
-const registerUser = (req, res) => {
-    let users = require('../mock_database/users.json')
-    users.data.push(req.body.data)
+//AUTHENTICATION
+const jwt = require('jsonwebtoken')
+const bcrypt = require('bcryptjs');
 
-    let usersString = JSON.stringify(users)
-    let fs = require("fs")
-    fs.writeFile("src/mock_database/users.json", usersString, (err, result) => {})
-    res.json({
-        status: "success"
+const tokenSignature = payload => {
+    return jwt.sign(payload, "random_key_change_later", {
+        expiresIn: "2 days"
     })
 }
 
-const loginUser = (req, res) => {
-    const users = require('../mock_database/users.json')
-    
-    const username = req.body.data.username
-    const password = req.body.data.password
-
-    const foundUser = users.data.find(user => user.username == username)
-
-    if(foundUser == undefined){
-        return res.status(404).json({
-            status: "fail",
-            message: "Username doesn't exist."
-        })
+const tokenCreation = (user, statusCode, res) => {
+    const token = tokenSignature(user)
+    const cookieOptions = {
+        expires: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
+        httpOnly: true
     }
+    res.cookie('jwt', token, cookieOptions)
+    user.password = undefined
 
-    if(foundUser.password != password){
-        return res.status(401).json({
-            status: "fail",
-            message: "Password incorrect."
-        })
-    }
-
-    return res.status(200).json({
-        status: "success",
-        message: "Successfully logged in."
+    return res.status(statusCode).json({
+        status: 'success',
+        token,
+        data: {
+            user
+        }
     })
+}
+
+const isCorrectPassword = async (inputPassword, userPassword) => {
+    return await bcrypt.compare(inputPassword, userPassword)
+}
+const validateEmail = (email) => {
+    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+}
+
+const registerUser = async (req, res) => {
+    try{
+        const { username, password, email, account_type } = req.body.data
+        if (!username || !password|| !email || !account_type)
+            return res.status(400).json({ message: "Please enter all fields." })
+
+        if (!validateEmail(email))
+            return res.status(400).json({ message: "Email is invalid." })
+
+        if(username.length < 4 ){
+            return res.status(400).json({message: "Username must be at least 4 characters long."})
+        }
+        if (password.length < 6)
+            return res.status(400).json({ message: "Password must be at least 6 characters long." })
+
+        let user = {
+            username: username,
+            email: email,
+            password: await bcrypt.hash(password, 12),
+            account_type: account_type
+        }
+
+        let users = require('../mock_database/users.json')
+        
+        let foundUser = users.data.find(user => user.email == email || user.username == username)
+        
+        if(foundUser != undefined){
+            return res.status(400).json({message: "User with that email already exists."})
+        }
+
+        user.wallet_public_key = ''
+        user.total_number_problems = 0
+        user.approved_problems = 0
+
+        users.data.push(user)
+        let usersString = JSON.stringify(users)
+        let fs = require("fs")
+        fs.writeFile("src/mock_database/users.json", usersString, (err, result) => {})
+    
+        tokenCreation(user, 201, res)
+    }
+    catch(err){
+        return res.status(500).json({message: "Internal server error."})
+    }
+}
+
+const loginUser = async (req, res) => {
+    try{
+        const { username, password } = req.body.data
+        if (!username) return res.status(400).json({ message: "Please enter username." })
+        if (!password) return res.status(400).json({ message: "Please enter password." })
+        
+        const users = require('../mock_database/users.json')
+        const foundUser = users.data.find(user => user.username == username)
+
+        if(foundUser == undefined){
+            return res.status(404).json({
+                status: "fail",
+                message: "Username doesn't exist."
+            })
+        }
+        
+        if (!(await isCorrectPassword(password, foundUser.password)))
+            return res.status(403).json({ message: "Password incorrect." })
+
+        tokenCreation(foundUser, 200, res)
+    }
+    catch(err){
+        return res.status(500).json({message: "Internal server error."})
+    }
 }
 
 module.exports = {getUserById, updateUser, deleteUser, registerUser, loginUser}

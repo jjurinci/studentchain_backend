@@ -1,18 +1,18 @@
 const getSolutionsByProblemId = (req, res) => {
     const solutions = require('../mock_database/solutions.json')
-    const foundSolutions = solutions.data.filter(solution => solution.problem_id == req.params.problem_id)
+    let foundSolutions = solutions.data.filter(solution => solution.problem_id == req.params.problem_id)
+    foundSolutions = foundSolutions.map(solution => populateSolution(solution))
     return res.status(200).json({
-        status: "success",
-        data: foundSolutions
+        foundSolutions
     })
 }
 
 const getSolutionsBySolverId = (req, res) => {
     const solutions = require('../mock_database/solutions.json')
-    const foundSolutions = solutions.data.filter(solution => solution.solver_id == req.params.solver_id)
+    let foundSolutions = solutions.data.filter(solution => solution.solver_id == req.params.solver_id)
+    foundSolutions = foundSolutions.map(solution => populateSolution(solution))
     return res.status(200).json({
-        status: "success",
-        data: foundSolutions
+        foundSolutions
     })
 }
 
@@ -47,6 +47,24 @@ const updateSolution = (req, res) => {
     return res.json({
         status: "success"
     })
+}
+
+const populateSolution = (solution) =>{
+    const problems   = require('../mock_database/problems.json')
+    const users      = require('../mock_database/users.json')
+    const reviews    = require('../mock_database/review_feedback.json')
+
+    solution.problem        = problems.data.find(problem => problem.id == solution.problem_id)
+    solution.current_solver = users.data.find(user => user.id == solution.solver_id)
+    solution.reviews        = reviews.data.filter(review => review.id == solution.review_feedback_id)
+
+    if(solution.current_solver)
+        solution.current_solver.password = solution.current_solver.email  = undefined    
+    
+    const problemsLogic = require('../logic/problemsLogic.js')
+    solution.problem = problemsLogic.populateProblem(solution.problem)
+    
+    return solution
 }
 
 module.exports = {getSolutionsByProblemId, getSolutionsBySolverId,
