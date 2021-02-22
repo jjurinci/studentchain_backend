@@ -13,12 +13,6 @@ app.use(bodyParser.json());
 app.listen(port, () => { console.log(`Listening at port ${port}`)})
 app.get('/', (req, res) => {res.send('Hello world')})
 
-/*
-    @TODO:
-        1. Check and evaluate request body before saving it to mock DB.
-        2. Setup constraints where they make sense (e.g. min. 6 characters for password)
- */
-
 const usersRouter      = require('./routes/usersRoutes.js')
 const problemsRouter   = require('./routes/problemsRoutes.js')
 const solutionsRouter  = require('./routes/solutionsRoutes.js')

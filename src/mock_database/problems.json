@@ -13,7 +13,26 @@
             "status": "being_solved",
             "category_id": "93d37fe1-e74f-4bca-af9c-7bfc8099dd66",
             "buyer_id": "6c4f5007-a1c1-440e-ac0a-3850f3dfc2b9",
-            "current_solver_id": "ecfc8cdb-e354-43e3-8255-8dd017fff6ae"
+            "current_solver_id": "ecfc8cdb-e354-43e3-8255-8dd017fff6ae",
+            "category": {
+                "id": "93d37fe1-e74f-4bca-af9c-7bfc8099dd66",
+                "name": "Mathematics"
+            },
+            "buyer": {
+                "id": "6c4f5007-a1c1-440e-ac0a-3850f3dfc2b9",
+                "username": "user514",
+                "wallet_public_key": "",
+                "account_type": "buyer",
+                "total_number_problems": 7,
+                "approved_problems": 6
+            },
+            "solver": {
+                "username": "test",
+                "account_type": "buyer",
+                "wallet_public_key": "",
+                "total_number_problems": 0,
+                "approved_problems": 0
+            }
         },
         {
             "id": "cd846f58-cd72-4128-9d83-b992ee8924a3",
@@ -28,7 +47,26 @@
             "status": "sent_for_review",
             "category_id": "d9f29788-9fd7-47f5-ac78-0dc639bac3ea",
             "buyer_id": "c7b035f7-5543-4dab-b724-f3ed2e4901bd",
-            "current_solver_id": "ecfc8cdb-e354-43e3-8255-8dd017fff6ae"
+            "current_solver_id": "ecfc8cdb-e354-43e3-8255-8dd017fff6ae",
+            "category": {
+                "id": "d9f29788-9fd7-47f5-ac78-0dc639bac3ea",
+                "name": "Programming"
+            },
+            "buyer": {
+                "id": "c7b035f7-5543-4dab-b724-f3ed2e4901bd",
+                "username": "jacob8",
+                "wallet_public_key": "",
+                "account_type": "buyer",
+                "total_number_problems": 0,
+                "approved_problems": 0
+            },
+            "solver": {
+                "username": "test",
+                "account_type": "buyer",
+                "wallet_public_key": "",
+                "total_number_problems": 0,
+                "approved_problems": 0
+            }
         },
         {
             "id": "8af6e5a4-b129-4544-beae-5d89559f8f1a",
@@ -44,7 +82,26 @@
             "status": "unsolved",
             "category_id": "93d37fe1-e74f-4bca-af9c-7bfc8099dd66",
             "buyer_id": "8e8b3f45-9dae-4c1c-8b28-a6d04125b760",
-            "current_solver_id": null
+            "current_solver_id": null,
+            "category": {
+                "id": "93d37fe1-e74f-4bca-af9c-7bfc8099dd66",
+                "name": "Mathematics"
+            },
+            "buyer": {
+                "id": "8e8b3f45-9dae-4c1c-8b28-a6d04125b760",
+                "username": "stardust",
+                "wallet_public_key": "",
+                "account_type": "buyer",
+                "total_number_problems": 2,
+                "approved_problems": 2
+            },
+            "solver": {
+                "username": "test",
+                "account_type": "buyer",
+                "wallet_public_key": "",
+                "total_number_problems": 0,
+                "approved_problems": 0
+            }
         },
         {
             "id": "cfb0210a-a407-45e3-b7d4-14df356f1fe4",
@@ -59,7 +116,26 @@
             "status": "unsolved",
             "category_id": "d9f29788-9fd7-47f5-ac78-0dc639bac3ea",
             "buyer_id": "c47f2a5b-aee4-4a01-aac9-2af09d898146",
-            "current_solver_id": null
+            "current_solver_id": null,
+            "category": {
+                "id": "d9f29788-9fd7-47f5-ac78-0dc639bac3ea",
+                "name": "Programming"
+            },
+            "buyer": {
+                "id": "c47f2a5b-aee4-4a01-aac9-2af09d898146",
+                "username": "franksun",
+                "wallet_public_key": "",
+                "account_type": "buyer",
+                "total_number_problems": 13,
+                "approved_problems": 15
+            },
+            "solver": {
+                "username": "test",
+                "account_type": "buyer",
+                "wallet_public_key": "",
+                "total_number_problems": 0,
+                "approved_problems": 0
+            }
         },
         {
             "id": "31ae657e-36f8-4309-9c49-a30fc01c40ac",
@@ -76,7 +152,26 @@
             "status": "unsolved",
             "category_id": "93d37fe1-e74f-4bca-af9c-7bfc8099dd66",
             "buyer_id": "dbabf275-2a15-409d-8f47-e990d1d6c755",
-            "current_solver_id": null
+            "current_solver_id": null,
+            "category": {
+                "id": "93d37fe1-e74f-4bca-af9c-7bfc8099dd66",
+                "name": "Mathematics"
+            },
+            "buyer": {
+                "id": "dbabf275-2a15-409d-8f47-e990d1d6c755",
+                "username": "dale457",
+                "wallet_public_key": "",
+                "account_type": "buyer",
+                "total_number_problems": 1,
+                "approved_problems": 1
+            },
+            "solver": {
+                "username": "test",
+                "account_type": "buyer",
+                "wallet_public_key": "",
+                "total_number_problems": 0,
+                "approved_problems": 0
+            }
         },
         {
             "id": "915083e4-4bd9-4156-a700-feccd4a6e79f",
@@ -92,7 +187,26 @@
             "status": "unsolved",
             "category_id": "de98f1c9-e62d-4ea5-8f92-9efd896a07cc",
             "buyer_id": "aee4ab76-2840-4c61-81ce-0af1af6b1203",
-            "current_solver_id": null
+            "current_solver_id": null,
+            "category": {
+                "id": "de98f1c9-e62d-4ea5-8f92-9efd896a07cc",
+                "name": "Statistics"
+            },
+            "buyer": {
+                "id": "aee4ab76-2840-4c61-81ce-0af1af6b1203",
+                "username": "mayaimls",
+                "wallet_public_key": "",
+                "account_type": "buyer",
+                "total_number_problems": 30,
+                "approved_problems": 23
+            },
+            "solver": {
+                "username": "test",
+                "account_type": "buyer",
+                "wallet_public_key": "",
+                "total_number_problems": 0,
+                "approved_problems": 0
+            }
         },
         {
             "id": "7b174836-7871-4c2f-a894-a2edb4113b49",
@@ -107,7 +221,26 @@
             "status": "being_solved",
             "category_id": "93d37fe1-e74f-4bca-af9c-7bfc8099dd66",
             "buyer_id": "aee4ab76-2840-4c61-81ce-0af1af6b1203",
-            "current_solver_id": "ecfc8cdb-e354-43e3-8255-8dd017fff6ae"
+            "current_solver_id": "ecfc8cdb-e354-43e3-8255-8dd017fff6ae",
+            "category": {
+                "id": "93d37fe1-e74f-4bca-af9c-7bfc8099dd66",
+                "name": "Mathematics"
+            },
+            "buyer": {
+                "id": "aee4ab76-2840-4c61-81ce-0af1af6b1203",
+                "username": "mayaimls",
+                "wallet_public_key": "",
+                "account_type": "buyer",
+                "total_number_problems": 30,
+                "approved_problems": 23
+            },
+            "solver": {
+                "username": "test",
+                "account_type": "buyer",
+                "wallet_public_key": "",
+                "total_number_problems": 0,
+                "approved_problems": 0
+            }
         },
         {
             "id": "eda3c428-2189-4d0e-b003-6a39c1bdab13",
@@ -122,7 +255,26 @@
             "status": "unsolved",
             "category_id": "d9f29788-9fd7-47f5-ac78-0dc639bac3ea",
             "buyer_id": "ecfc8cdb-e354-43e3-8255-8dd017fff6ae",
-            "current_solver_id": null
+            "current_solver_id": null,
+            "category": {
+                "id": "d9f29788-9fd7-47f5-ac78-0dc639bac3ea",
+                "name": "Programming"
+            },
+            "buyer": {
+                "id": "ecfc8cdb-e354-43e3-8255-8dd017fff6ae",
+                "username": "kevin7",
+                "wallet_public_key": "",
+                "account_type": "solver",
+                "total_number_problems": 0,
+                "approved_problems": 0
+            },
+            "solver": {
+                "username": "test",
+                "account_type": "buyer",
+                "wallet_public_key": "",
+                "total_number_problems": 0,
+                "approved_problems": 0
+            }
         },
         {
             "id": "0d5ce5d3-3eb1-4353-a5ca-e07127fafb26",
@@ -137,7 +289,26 @@
             "status": "waiting_for_review",
             "category_id": "93d37fe1-e74f-4bca-af9c-7bfc8099dd66",
             "buyer_id": "ecfc8cdb-e354-43e3-8255-8dd017fff6ae",
-            "current_solver_id": null
+            "current_solver_id": null,
+            "category": {
+                "id": "93d37fe1-e74f-4bca-af9c-7bfc8099dd66",
+                "name": "Mathematics"
+            },
+            "buyer": {
+                "id": "ecfc8cdb-e354-43e3-8255-8dd017fff6ae",
+                "username": "kevin7",
+                "wallet_public_key": "",
+                "account_type": "solver",
+                "total_number_problems": 0,
+                "approved_problems": 0
+            },
+            "solver": {
+                "username": "test",
+                "account_type": "buyer",
+                "wallet_public_key": "",
+                "total_number_problems": 0,
+                "approved_problems": 0
+            }
         },
         {
             "id": "4305d271-7b4a-4104-9771-49640f34a5f4",
@@ -152,39 +323,26 @@
             "status": "being_solved",
             "category_id": "93d37fe1-e74f-4bca-af9c-7bfc8099dd66",
             "buyer_id": "ecfc8cdb-e354-43e3-8255-8dd017fff6ae",
-            "current_solver_id": "3e90e684-a552-426b-86b1-f931d5ac88de"
-        },
-        {
-            "id": "KgPpOzCd9nWNVrfW",
-            "created_at": "2021-02-20T18:37:15.085Z",
-            "title": "test",
-            "description": "This is a test post.",
-            "attached_files": [
-                "example1.pdf",
-                "example2.pdf"
-            ],
-            "due_days": "4",
-            "price": "0.23",
-            "category_id": "93d37fe1-e74f-4bca-af9c-7bfc8099dd66",
-            "buyer_id": "testid1",
-            "solver_id": null,
-            "status": "unsolved"
-        },
-        {
-            "id": "Y85p3SJ9d10T6lJ1",
-            "created_at": "2021-02-20T18:48:03.118Z",
-            "title": "test2",
-            "description": "testing 2",
-            "attached_files": [
-                "example1.pdf",
-                "example2.pdf"
-            ],
-            "due_days": "5",
-            "price": "0.34",
-            "category_id": "93d37fe1-e74f-4bca-af9c-7bfc8099dd66",
-            "buyer_id": "testid2",
-            "solver_id": null,
-            "status": "unsolved"
+            "current_solver_id": "3e90e684-a552-426b-86b1-f931d5ac88de",
+            "category": {
+                "id": "93d37fe1-e74f-4bca-af9c-7bfc8099dd66",
+                "name": "Mathematics"
+            },
+            "buyer": {
+                "id": "ecfc8cdb-e354-43e3-8255-8dd017fff6ae",
+                "username": "kevin7",
+                "wallet_public_key": "",
+                "account_type": "solver",
+                "total_number_problems": 0,
+                "approved_problems": 0
+            },
+            "solver": {
+                "username": "test",
+                "account_type": "buyer",
+                "wallet_public_key": "",
+                "total_number_problems": 0,
+                "approved_problems": 0
+            }
         }
     ]
 }

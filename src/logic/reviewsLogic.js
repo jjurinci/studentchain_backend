@@ -1,42 +1,45 @@
-const getReviewsBySolutionId = (req, res) => {
-    const reviewFeedback = require('../mock_database/review_feedback.json')
-    const foundReviews = reviewFeedback.data.filter(review => review.solution_id == req.params.solution_id) 
-    return res.status(200).json({
-        foundReviews
-    })
+const dbConnection = require('../database/db.js')
+const mongo = require('mongodb')
+
+const getReviewsBySolutionId = async (req, res) => {
+    const db = await dbConnection.connect()
+    const received_solution_id = req.params.solution_id
+
+    const cursor = await db.collection("reviews").find({ solution_id: received_solution_id})
+    const results = await cursor.toArray()
+
+    return res.status(200).json(results)
 }
 
-const postReview = (req, res) => {
-    let review_feedback = require('../mock_database/review_feedback.json')
-    review_feedback.data.push(req.body.data)
+const postReview = async (req, res) => {
+    const db = await dbConnection.connect()    
+    const doc = req.body.data
+    const result = await db.collection("reviews").insertOne(doc)
 
-    let review_feedbackString = JSON.stringify(review_feedback)
-    let fs = require("fs")
-    fs.writeFile("src/mock_database/review_feedback.json", review_feedbackString, (err, result) => {})
-    res.json({
-        status: "success"
-    })
-}
-
-const updateReview = (req, res) => {
-    const reviewFeedback = require('../mock_database/review_feedback.json')
-    const foundReviewIndex = reviewFeedback.data.findIndex(review => review.id == req.params.id)
-
-    if(foundReviewIndex == -1){
-        return res.json({
-            status: "fail",
-            message: "Review not found."
-        })
+    if (result.insertedCount == 1){
+        let problem_id = mongo.ObjectId(doc.problem_id)
+        let status = (doc.approved) ? "approved" : "rejected"
+        await db.collection("problems").updateOne(
+            {_id : problem_id},
+            {$set : {status : status}}
+        ) 
+        res.status(200).json({message: 'Successfully posted', id: result.insertedId});
     }
+    else res.status(400).json({status: 'Failed to post.'});
+}
 
-    reviewFeedback.data[foundReviewIndex] = req.body.data;
-    let reviewString = JSON.stringify(reviewFeedback)
-    let fs = require("fs")
-    fs.writeFile("src/mock_database/review_feedback.json", reviewString, (err, result) => {})
+const updateReview = async (req, res) => {
+    let doc = req.body.data;
+    delete doc._id;
     
-    return res.json({
-        status: "success"
-    })
+    const id = mongo.ObjectId(req.params.id);
+    const db = await dbConnection.connect()
+    const result = await db.collection("reviews").replaceOne({_id: id}, doc)
+
+    if (result.modifiedCount == 1) 
+        res.status(200).json({message: 'Successfully edited review.', id: result.InsertedId});
+    else 
+        res.status(400).json({message: 'Failed to edit review.'});
 }
 
 module.exports = {getReviewsBySolutionId, postReview, updateReview}

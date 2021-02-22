@@ -1,79 +1,211 @@
-const getSolutionsByProblemId = (req, res) => {
-    const solutions = require('../mock_database/solutions.json')
-    let foundSolutions = solutions.data.filter(solution => solution.problem_id == req.params.problem_id)
-    foundSolutions = foundSolutions.map(solution => populateSolution(solution))
-    return res.status(200).json(foundSolutions)
+const mongo = require('mongodb')
+const dbConnection = require('../database/db.js')  
+
+const problemsLogic = require('./problemsLogic.js')
+const usersLogic = require('./usersLogic.js')
+
+const getSolutionsByProblemId = async (req, res) => {
+    const db = await dbConnection.connect()
+    
+    
+    const received_problem_id = req.params.problem_id
+    
+    // Triple join for population of foreign keys
+    const cursor = await db.collection("solutions").aggregate([
+        {$match: {problem_id: received_problem_id}},
+
+        { $addFields: { "solver_id":    { "$toObjectId": "$solver_id" }}},
+        { $addFields: { "review_id": { "$toObjectId": "$review_id" }}},
+        { $addFields: { "problem_id":   { "$toObjectId": "$problem_id" }}},
+        {
+            $lookup: {
+                from: 'users',
+                localField: 'solver_id',
+                foreignField: '_id',
+                as: 'solvers'
+            },
+        },
+        {
+            $lookup: {
+                from: 'reviews',
+                localField: 'review_id',
+                foreignField: '_id',
+                as: 'reviews'
+            },
+        },
+        {
+            $lookup: {
+                from: 'problems',
+                localField: 'problem_id',
+                foreignField: '_id',
+                as: 'problem'
+            }
+        },
+        { $unwind: {path: "$problem", preserveNullAndEmptyArrays: true }},
+    ])
+
+    let solutions = await cursor.toArray()
+    return res.status(200).json(solutions)
 }
 
-const getSolutionsByMultipleProblemIds = (req, res) => {
-    const solutions = require('../mock_database/solutions.json')
+const getSolutionsByMultipleProblemIds = async (req, res) => {
+    const db = await dbConnection.connect()
     
+    const cursor = await db.collection("problems").aggregate([
+        { $addFields: { "current_solver_id":    { "$toObjectId": "$current_solver_id" }}},
+        { $addFields: { "category_id": { "$toObjectId": "$category_id" }}},
+        { $addFields: { "buyer_id":   { "$toObjectId": "$buyer_id" }}},
+        {
+            $lookup: {
+                from: 'users',
+                localField: 'current_solver_id',
+                foreignField: '_id',
+                as: 'solvers'
+            },
+        },
+        {
+            $lookup: {
+                from: 'users',
+                localField: 'buyer_id',
+                foreignField: '_id',
+                as: 'buyers'
+            },
+        },
+        {
+            $lookup: {
+                from: 'categories',
+                localField: 'category_id',
+                foreignField: '_id',
+                as: 'category'
+            },
+        },
+        { $unwind: {path: "$category", preserveNullAndEmptyArrays: true }},
+    ])
+
+    const allProblems = await cursor.toArray()
     const problem_ids = req.body.data
     const problem_id_included = {}
-    for(id of problem_ids)
-        problem_id_included[id] = true
-
-    let foundSolutions = solutions.data.filter(solution => problem_id_included[solution.problem_id])
-    foundSolutions = foundSolutions.map(solution => populateSolution(solution))
-    return res.status(200).json(foundSolutions)
-}
-
-const getSolutionsBySolverId = (req, res) => {
-    const solutions = require('../mock_database/solutions.json')
-    let foundSolutions = solutions.data.filter(solution => solution.solver_id == req.params.solver_id)
-    foundSolutions = foundSolutions.map(solution => populateSolution(solution))
-    return res.status(200).json(foundSolutions)
-}
-
-const postSolution = (req, res) => {
-    let solutions = require('../mock_database/solutions.json')
-    solutions.data.push(req.body.data)
-
-    let solutionsString = JSON.stringify(solutions)
-    let fs = require("fs")
-    fs.writeFile("src/mock_database/solutions.json", solutionsString, (err, result) => {})
-    res.json({
-        status: "success"
+    allProblems.forEach(problem => {
+        if(problem_ids.includes(String(problem._id))) 
+            problem_id_included[problem._id] = problem
     })
+
+    const cursorSolutions = await db.collection("solutions").aggregate([
+        { $addFields: { "solver_id":    { "$toObjectId": "$solver_id" }}},
+        { $addFields: { "review_id": { "$toObjectId": "$review_id" }}},
+        { $addFields: { "problem_id": { "$toObjectId": "$problem_id" }}},
+        
+        {
+            $lookup : {
+                from: 'users',
+                localField: 'solver_id',
+                foreignField: '_id',
+                as: 'solver'
+            },
+        },
+        {$unwind: {path: '$solver', preserveNullAndEmptyArrays: true}},
+        {
+            $lookup : {
+                from: 'reviews',
+                localField: 'review_id',
+                foreignField: '_id',
+                as: 'reviews'
+            }
+        },
+        {
+            $lookup : {
+                from: 'problems',
+                localField: 'problem_id',
+                foreignField: '_id',
+                as: 'problem'
+            }
+        },
+        {$unwind: {path: '$problem', preserveNullAndEmptyArrays: true}},
+    ])
+
+    let allSolutions = await cursorSolutions.toArray()
+
+    let foundSolutions = allSolutions.filter(solution => problem_id_included[solution.problem_id])
+    
+    foundSolutions = foundSolutions.map(solution => {
+        solution.problem = problem_id_included[solution.problem_id]
+        return solution
+    })
+
+    return res.status(200).json(foundSolutions)
 }
 
-const updateSolution = (req, res) => {
-    const solutions = require('../mock_database/solutions.json')
-    const foundSolutionIndex = solutions.data.findIndex(solution => solution.id == req.params.id)
+const getSolutionsBySolverId = async (req, res) => {
+    const db = await dbConnection.connect()
 
-    if(foundSolutionIndex == -1){
-        return res.json({
-            status: "fail",
-            message: "Solution not found."
-        })
+    const received_solver_id = req.params.solver_id
+
+    const cursor = await db.collection("solutions").aggregate([
+        {$match: {solver_id: received_solver_id}},
+
+        { $addFields: { "solver_id":    { "$toObjectId": "$solver_id" }}},
+        { $addFields: { "review_id": { "$toObjectId": "$review_id" }}},
+        { $addFields: { "problem_id":   { "$toObjectId": "$problem_id" }}},
+        {
+            $lookup: {
+                from: 'users',
+                localField: 'solver_id',
+                foreignField: '_id',
+                as: 'solvers'
+            },
+        },
+        {
+            $lookup: {
+                from: 'reviews',
+                localField: 'review_id',
+                foreignField: '_id',
+                as: 'reviews'
+            },
+        },
+        {
+            $lookup: {
+                from: 'problems',
+                localField: 'problem_id',
+                foreignField: '_id',
+                as: 'problem'
+            }
+        },
+        { $unwind: {path: "$problem", preserveNullAndEmptyArrays: true }},
+    ])
+
+    let solutions = await cursor.toArray()
+    return res.status(200).json(solutions)
+}
+
+const postSolution = async (req, res) => {
+    const db = await dbConnection.connect()    
+    const doc = req.body.data
+    const result = await db.collection("solutions").insertOne(doc)
+
+    if (result.insertedCount == 1){
+        let id = mongo.ObjectId(req.body.data.problem_id)
+        const result = await db.collection("problems").updateOne(
+            {_id: id},
+            {$set: {status: 'sent_for_review'}}
+        )
+
+        res.status(200).json({message: 'Successfully posted', id: result.insertedId});
     }
-
-    solutions.data[foundSolutionIndex] = req.body.data;
-    let solutionString = JSON.stringify(solutions)
-    let fs = require("fs")
-    fs.writeFile("src/mock_database/solutions.json", solutionString, (err, result) => {})
-    
-    return res.json({
-        status: "success"
-    })
+    else res.status(400).json({status: 'Failed to post.'});
 }
 
-const populateSolution = (solution) =>{
-    const problems   = require('../mock_database/problems.json')
-    const users      = require('../mock_database/users.json')
-    const reviews    = require('../mock_database/review_feedback.json')
-
-    solution.problem        = problems.data.find(problem => problem.id == solution.problem_id)
-    solution.solver         = users.data.find(user => user.id == solution.solver_id)
-    solution.reviews        = reviews.data.filter(review => review.id == solution.review_feedback_id)
-
-    if(solution.current_solver)
-        solution.current_solver.password = solution.current_solver.email  = undefined    
+const updateSolution = async (req, res) => {
+    let doc = req.body.data;
+    delete doc._id;
     
-    const problemsLogic = require('../logic/problemsLogic.js')
-    solution.problem = problemsLogic.populateProblem(solution.problem)
-    
-    return solution
+    const id = mongo.ObjectId(req.params.id);
+    const db = await dbConnection.connect()    
+    const result = await db.collection("solutions").replaceOne({_id: id}, doc)
+
+    if (result.modifiedCount == 1) 
+        res.status(200).json({message: 'Successfully edited solution.', id: result.InsertedId});
+    else 
+        res.status(400).json({message: 'Failed to edit solution.'});
 }
 
 module.exports = {getSolutionsByProblemId, getSolutionsByMultipleProblemIds,

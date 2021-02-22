@@ -6,38 +6,32 @@
         4. Implement real login and register (secret env keys,auth tokens, hashes)
 */
 
-const getUserById = (req, res) => {
-    const users = require('../mock_database/users.json')
-    const foundUser = users.data.find(user => user.id == req.params.user_id)
+const mongo = require('mongodb')
+const dbConnection = require('../database/db.js')
+
+const getUserById = async (req, res) => {
+    const db = await dbConnection.connect()
+    const received_user_id = mongo.ObjectId(req.params.id) 
+    const result = await db.collection("users").findOne({ _id: received_user_id})
     
-    if(foundUser == undefined){
-        return res.status(404).json({
-            status: "fail",
-            message: "User not found."
-        })
-    }
-    return res.status(200).json(foundUser)    
+    delete result.email
+    delete result.password
+
+    return res.status(200).json(result)
 }
 
-const updateUser = (req, res) => {
-    const users = require('../mock_database/users.json')
-    const foundUserIndex = users.data.findIndex(user => user.id == req.params.id)
-
-    if(foundUserIndex == -1){
-        return res.status(404).json({
-            status: "fail",
-            message: "User not found."
-        })
-    }
-
-    users.data[foundUserIndex] = req.body.data;
-    let usersString = JSON.stringify(users)
-    let fs = require("fs")
-    fs.writeFile("src/mock_database/users.json", usersString, (err, result) => {})
+const updateUser = async (req, res) => {
+    let doc = req.body.data;
+    delete doc._id;
     
-    return res.status(200).json({
-        status: "success"
-    })
+    const id = mongo.ObjectId(req.params.id);
+    const db = await dbConnection.connect()    
+    const result = await db.collection("users").replaceOne({_id : id}, doc)
+
+    if (result.modifiedCount == 1) 
+        res.status(200).json({message: 'Successfully edited user.', id: result.InsertedId});
+    else 
+        res.status(400).json({message: 'Failed to edit user.'});
 }
 
 /* 
@@ -51,39 +45,22 @@ const updateUser = (req, res) => {
     their solutions and reviews from anywhere upon account deletion.
 */
 
-const deleteUser = (req, res) => {
-    let users = require('../mock_database/users.json')
-    const foundUserIndex = users.data.findIndex(user => user.id == req.params.id)
+const deleteUser = async (req, res) => {
+    const id = req.params.id
+    const db = await dbConnection.connect()
+    const result = await db.collection("problems").deleteOne({_id : id})
 
-    if(foundUserIndex == -1){
-        return res.status(404).json({
-            status: "fail",
-            message: "User not found."   
-        })
+    if (result.deletedCount == 1){
+        const resultProblem = db.collection("problems").updateMany(
+            {
+                buyer_id:id,
+                $set: {status: 'buyer_acc_deleted'}
+            }
+        )
+        res.status(200).json({message: 'Successfully deleted problem.', id: result.InsertedId});
     }
-
-    let problems = require('../mock_database/problems.json')
-
-    problems.data = problems.data.map(problem => {
-        if(problem.buyer_id == req.params.id){
-            problem.status = "buyer_acc_deleted"
-        }
-        return problem
-    })
-
-    users.data.splice(foundUserIndex, 1)
-
-    const problemsString = JSON.stringify(problems)
-    let fs = require("fs")
-    fs.writeFile("src/mock_database/problems.json", problemsString, (err, result) => {})
-    
-    const usersString = JSON.stringify(users)
-    fs.writeFile("src/mock_database/users.json", usersString, (err, result) => {})
-
-    return res.status(200).json({
-        status: "success",
-        message: "User successfully deleted."   
-    })
+    else 
+        res.status(400).json({message: 'Failed to delete problem.'});
 }
 
 //AUTHENTICATION
@@ -144,23 +121,21 @@ const registerUser = async (req, res) => {
             account_type: account_type
         }
 
-        let users = require('../mock_database/users.json')
+        const db = await dbConnection.connect()
         
-        let foundUser = users.data.find(user => user.email == email || user.username == username)
-        
-        if(foundUser != undefined){
-            return res.status(400).json({message: "User with that email already exists."})
-        }
+        let userExists = await db.collection("users").findOne(
+            {or : {email: user.email, username: user.username}}
+        )
+        if (userExists) return res.status(400).json({ message: "User already exists." })
 
         user.wallet_public_key = ''
         user.total_number_problems = 0
         user.approved_problems = 0
 
-        users.data.push(user)
-        let usersString = JSON.stringify(users)
-        let fs = require("fs")
-        fs.writeFile("src/mock_database/users.json", usersString, (err, result) => {})
-    
+        const result = await db.collection("users").insertOne(user)
+
+        if (result.insertedCount != 1) res.status(400).json({status: 'Failed to register.'});
+
         tokenCreation(user, 201, res)
     }
     catch(err){
@@ -174,16 +149,11 @@ const loginUser = async (req, res) => {
         if (!username) return res.status(400).json({ message: "Please enter username." })
         if (!password) return res.status(400).json({ message: "Please enter password." })
         
-        const users = require('../mock_database/users.json')
-        const foundUser = users.data.find(user => user.username == username)
+        const db = await dbConnection.connect()
 
-        if(foundUser == undefined){
-            return res.status(404).json({
-                status: "fail",
-                message: "Username doesn't exist."
-            })
-        }
-        
+        let foundUser = await db.collection("users").findOne({username: username})
+        if (!foundUser) return res.status(400).json({ message: "Username doesn't exist." })
+
         if (!(await isCorrectPassword(password, foundUser.password)))
             return res.status(403).json({ message: "Password incorrect." })
 
